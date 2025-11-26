@@ -1,10 +1,28 @@
 import React from 'react';
+import { Download } from 'lucide-react';
+import html2pdf from 'html2pdf.js';
 import { ResumeDocument } from './ResumeDocument';
 import { useResume } from '../../context/ResumeContext';
 import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 
 export const PreviewPane: React.FC = () => {
     const { settings, updateSettings } = useResume();
+
+    const handleDownload = () => {
+        const element = document.getElementById('resume-preview');
+        if (!element) return;
+
+        const opt = {
+            margin: 0,
+            filename: 'resume.pdf',
+            image: { type: 'jpeg' as const, quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+        };
+
+        html2pdf().set(opt).from(element).save();
+    };
 
     return (
         <div className="flex flex-col h-full bg-slate-200/50">
@@ -59,6 +77,13 @@ export const PreviewPane: React.FC = () => {
                         onChange={(e) => updateSettings({ themeColor: e.target.value })}
                     />
                 </div>
+
+                <div className="h-6 w-px bg-border mx-2" />
+
+                <Button size="sm" onClick={handleDownload}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Download PDF
+                </Button>
             </div>
 
             {/* Preview Area */}
