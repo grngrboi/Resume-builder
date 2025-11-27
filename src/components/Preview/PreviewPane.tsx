@@ -37,7 +37,10 @@ export const PreviewPane: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 pointer-events-none" />
 
             {/* Styling Controls Toolbar */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl p-2 px-4 border border-white/10 bg-slate-900/80 backdrop-blur-xl flex flex-wrap gap-4 items-center justify-between shadow-2xl rounded-2xl transition-all duration-300 hover:bg-slate-900/90 hover:shadow-blue-500/10">
+            <div
+                className="absolute left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl p-2 px-4 border border-white/10 bg-slate-900/80 backdrop-blur-xl flex flex-wrap gap-4 items-center justify-between shadow-2xl rounded-2xl transition-all duration-300 hover:bg-slate-900/90 hover:shadow-blue-500/10"
+                style={{ top: 'calc(var(--header-h) + var(--toolbar-gap))' }}
+            >
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                         <label className="text-xs font-medium text-slate-400 uppercase tracking-wider hidden sm:block">Font</label>
@@ -123,7 +126,10 @@ export const PreviewPane: React.FC = () => {
             </div>
 
             {/* Preview Area */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-8 pt-32 flex justify-center">
+            <div
+                className="flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center"
+                style={{ paddingTop: 'calc(var(--header-h) + var(--toolbar-gap) + var(--toolbar-h) + var(--preview-gap))' }}
+            >
                 <div className="origin-top scale-[0.6] sm:scale-[0.7] md:scale-[0.8] lg:scale-[0.9] xl:scale-100 transition-transform duration-200">
                     <ResumeDocument />
                 </div>
