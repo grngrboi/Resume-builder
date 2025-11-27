@@ -32,12 +32,12 @@ const EducationItem: React.FC<EducationItemProps> = ({ education, onRemove, onUp
     };
 
     return (
-        <div ref={setNodeRef} style={style} className="mb-4 rounded-md border border-border bg-white p-4 shadow-sm">
+        <div ref={setNodeRef} style={style} className="mb-4 rounded-xl border border-white/10 bg-slate-900/40 p-4 shadow-sm backdrop-blur-md">
             <div className="mb-4 flex items-center justify-between">
                 <button
                     {...attributes}
                     {...listeners}
-                    className="cursor-grab text-slate-400 hover:text-slate-600 active:cursor-grabbing"
+                    className="cursor-grab text-slate-400 hover:text-slate-200 active:cursor-grabbing"
                 >
                     <GripVertical className="h-5 w-5" />
                 </button>
@@ -45,7 +45,7 @@ const EducationItem: React.FC<EducationItemProps> = ({ education, onRemove, onUp
                     variant="ghost"
                     size="sm"
                     onClick={() => onRemove(education.id)}
-                    className="text-red-500 hover:bg-red-50 hover:text-red-600"
+                    className="text-red-400 hover:bg-red-900/20 hover:text-red-300"
                 >
                     <Trash2 className="h-4 w-4" />
                 </Button>
@@ -142,7 +142,7 @@ export const Education: React.FC = () => {
                 </SortableContext>
             </DndContext>
 
-            <Button onClick={handleAdd} variant="outline" className="w-full border-dashed">
+            <Button onClick={handleAdd} variant="outline" className="w-full border-dashed border-white/20 hover:bg-white/5 hover:text-white">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Education
             </Button>

@@ -19,12 +19,12 @@ export const Achievements: React.FC = () => {
     return (
         <div className="space-y-4">
             {achievements.map((achievement) => (
-                <div key={achievement.id} className="relative rounded-md border border-border bg-white p-4 shadow-sm">
+                <div key={achievement.id} className="relative rounded-xl border border-white/10 bg-slate-900/40 p-4 shadow-sm backdrop-blur-md">
                     <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         onClick={() => removeItem('achievements', achievement.id)}
-                        className="absolute right-2 top-2 text-red-500 hover:bg-red-50 hover:text-red-600"
+                        className="absolute right-2 top-2 text-red-400 hover:bg-red-900/20 hover:text-red-300"
                     >
                         <Trash2 className="h-4 w-4" />
                     </Button>
@@ -47,7 +47,7 @@ export const Achievements: React.FC = () => {
                 </div>
             ))}
 
-            <Button onClick={handleAdd} variant="outline" className="w-full border-dashed">
+            <Button onClick={handleAdd} variant="outline" className="w-full border-dashed border-white/20 hover:bg-white/5 hover:text-white">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Achievement
             </Button>

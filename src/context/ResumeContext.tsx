@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { ResumeState, ResumeData, SectionId, Project, Education, Skill, Achievement, Leadership, Certificate, Reference, StyleSettings } from '../types/resume';
-import { v4 as uuidv4 } from 'uuid';
 
 // Helper to generate IDs if uuid import fails or for simplicity
 const generateId = () => Math.random().toString(36).substr(2, 9);

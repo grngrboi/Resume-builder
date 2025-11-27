@@ -1,20 +1,18 @@
 import React from 'react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '../../lib/utils';
 
-function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+    noPadding?: boolean;
 }
 
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> { }
-
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-    ({ className, ...props }, ref) => {
+    ({ className, noPadding = false, ...props }, ref) => {
         return (
             <div
                 ref={ref}
                 className={cn(
-                    'rounded-lg border border-border bg-white text-text-primary shadow-sm',
+                    "glass-panel rounded-xl overflow-hidden transition-all duration-300 hover:shadow-primary/5",
+                    noPadding ? "" : "p-6",
                     className
                 )}
                 {...props}
@@ -24,12 +22,12 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
 );
 Card.displayName = 'Card';
 
-export const CardHeader = React.forwardRef<HTMLDivElement, CardProps>(
+export const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => {
         return (
             <div
                 ref={ref}
-                className={cn('flex flex-col space-y-1.5 p-6', className)}
+                className={cn("flex flex-col space-y-1.5 p-6", className)}
                 {...props}
             />
         );
@@ -42,7 +40,7 @@ export const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttrib
         return (
             <h3
                 ref={ref}
-                className={cn('text-2xl font-semibold leading-none tracking-tight', className)}
+                className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
                 {...props}
             />
         );
@@ -50,10 +48,10 @@ export const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttrib
 );
 CardTitle.displayName = 'CardTitle';
 
-export const CardContent = React.forwardRef<HTMLDivElement, CardProps>(
+export const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => {
         return (
-            <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+            <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
         );
     }
 );

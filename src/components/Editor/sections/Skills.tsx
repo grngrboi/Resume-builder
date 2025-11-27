@@ -23,7 +23,7 @@ const SkillList: React.FC<SkillListProps> = ({ title, skills, type }) => {
 
     return (
         <div className="mb-6 last:mb-0">
-            <h4 className="mb-3 text-sm font-medium text-text-secondary uppercase tracking-wider">{title}</h4>
+            <h4 className="mb-3 text-sm font-medium text-slate-400 uppercase tracking-wider">{title}</h4>
             <div className="space-y-3">
                 {skills.map((skill) => (
                     <div key={skill.id} className="flex gap-2">
@@ -35,15 +35,15 @@ const SkillList: React.FC<SkillListProps> = ({ title, skills, type }) => {
                         />
                         <Button
                             variant="ghost"
-                            size="icon"
+                            size="sm"
                             onClick={() => removeItem('skills', skill.id)}
-                            className="text-red-500 hover:bg-red-50 hover:text-red-600 shrink-0"
+                            className="text-red-400 hover:bg-red-900/20 hover:text-red-300 shrink-0"
                         >
                             <Trash2 className="h-4 w-4" />
                         </Button>
                     </div>
                 ))}
-                <Button onClick={handleAdd} variant="outline" size="sm" className="w-full border-dashed">
+                <Button onClick={handleAdd} variant="outline" size="sm" className="w-full border-dashed border-white/20 hover:bg-white/5 hover:text-white">
                     <Plus className="mr-2 h-3 w-3" />
                     Add {title}
                 </Button>

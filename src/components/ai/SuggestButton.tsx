@@ -60,12 +60,12 @@ export const SuggestButton: React.FC<SuggestButtonProps> = ({ context, currentTe
                         className="fixed inset-0 z-40"
                         onClick={() => setIsOpen(false)}
                     />
-                    <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-lg border border-border bg-white p-4 shadow-lg animate-in fade-in zoom-in-95 duration-200">
+                    <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-xl border border-white/10 bg-slate-900/90 p-4 shadow-xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
                         <div className="mb-2 flex items-center justify-between">
-                            <h4 className="text-sm font-semibold text-text-primary">AI Suggestion</h4>
+                            <h4 className="text-sm font-semibold text-white">AI Suggestion</h4>
                             <Button
                                 variant="ghost"
-                                size="icon"
+                                size="sm"
                                 className="h-6 w-6"
                                 onClick={() => setIsOpen(false)}
                             >
@@ -74,13 +74,13 @@ export const SuggestButton: React.FC<SuggestButtonProps> = ({ context, currentTe
                         </div>
 
                         {isLoading ? (
-                            <div className="flex items-center justify-center py-8 text-text-secondary">
+                            <div className="flex items-center justify-center py-8 text-slate-400">
                                 <RefreshCw className="h-5 w-5 animate-spin mr-2" />
                                 Generating...
                             </div>
                         ) : (
                             <>
-                                <div className="mb-4 max-h-60 overflow-y-auto rounded-md bg-slate-50 p-3 text-sm text-text-secondary">
+                                <div className="mb-4 max-h-60 overflow-y-auto rounded-md bg-slate-800/50 p-3 text-sm text-slate-300">
                                     {suggestion}
                                 </div>
                                 <div className="flex gap-2">

@@ -58,7 +58,7 @@ export const EditorPane: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-4 bg-slate-100/50">
+        <div className="h-full overflow-y-auto p-4 bg-transparent">
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}

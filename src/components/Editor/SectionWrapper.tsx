@@ -32,20 +32,35 @@ export const SectionWrapper: React.FC<SectionWrapperProps> = ({ id, title, child
 
     const [isOpen, setIsOpen] = React.useState(true);
 
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const { currentTarget: target } = e;
+        const rect = target.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        target.style.setProperty("--mouse-x", `${x}px`);
+        target.style.setProperty("--mouse-y", `${y}px`);
+    };
+
     return (
         <div ref={setNodeRef} style={style} className="mb-4">
-            <Card>
-                <div className="flex items-center border-b border-border bg-slate-50 px-4 py-3">
+            <div
+                onMouseMove={handleMouseMove}
+                className="group relative border border-white/5 bg-[#0A0A0A]/60 backdrop-blur-xl shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 hover:border-white/10 hover:bg-[#0A0A0A]/80"
+                style={{
+                    backgroundImage: `radial-gradient(800px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.06), transparent 40%)`
+                } as React.CSSProperties}
+            >
+                <div className="flex items-center border-b border-white/5 px-5 py-4">
                     <button
                         {...attributes}
                         {...listeners}
-                        className="mr-3 cursor-grab text-slate-400 hover:text-slate-600 active:cursor-grabbing"
+                        className="mr-3 cursor-grab text-slate-400 hover:text-slate-200 active:cursor-grabbing"
                     >
                         <GripVertical className="h-5 w-5" />
                     </button>
 
                     <button
-                        className="flex-1 text-left font-semibold text-text-primary"
+                        className="flex-1 text-left text-lg font-bold text-white tracking-tight"
                         onClick={() => setIsOpen(!isOpen)}
                     >
                         {title}
@@ -53,7 +68,7 @@ export const SectionWrapper: React.FC<SectionWrapperProps> = ({ id, title, child
 
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="text-slate-400 hover:text-slate-600"
+                        className="text-slate-400 hover:text-slate-200"
                     >
                         <svg
                             className={`h-5 w-5 transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
@@ -71,7 +86,7 @@ export const SectionWrapper: React.FC<SectionWrapperProps> = ({ id, title, child
                         {children}
                     </div>
                 )}
-            </Card>
+            </div>
         </div>
     );
 };
