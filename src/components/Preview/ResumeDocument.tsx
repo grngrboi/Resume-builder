@@ -11,6 +11,7 @@ export const ResumeDocument: React.FC = () => {
             case 'Roboto': return 'font-sans'; // Assuming we map these or load fonts
             case 'Lato': return 'font-sans';
             case 'Merriweather': return 'font-serif';
+            case 'SF Pro': return 'font-[SF_Pro_Display]';
             default: return 'font-sans';
         }
     };
@@ -32,12 +33,17 @@ export const ResumeDocument: React.FC = () => {
     };
 
     const containerClasses = clsx(
-        'bg-white text-text-primary p-8 min-h-[297mm] w-[210mm] mx-auto shadow-lg print:shadow-none print:w-full print:h-full print:p-0 print:m-0',
+        'bg-white text-text-primary p-8 min-h-[297mm] w-[210mm] mx-auto shadow-lg print:shadow-none print:w-full print:h-full print:p-0 print:m-0 print:absolute print:top-0 print:left-0 print:z-50',
         getFontFamily(),
         getFontSize(),
         getLineHeight(),
+        getLineHeight(),
         settings.alignment === 'justify' ? 'text-justify' : 'text-left'
     );
+
+    const containerStyle = {
+        color: settings.fontColor,
+    };
 
     const SectionTitle = ({ children }: { children: React.ReactNode }) => (
         <h2
@@ -231,7 +237,7 @@ export const ResumeDocument: React.FC = () => {
     };
 
     return (
-        <div id="resume-preview" className={containerClasses}>
+        <div id="resume-preview" className={containerClasses} style={containerStyle}>
             {sectionOrder.map(sectionId => (
                 <React.Fragment key={sectionId}>
                     {renderSection(sectionId)}

@@ -3,10 +3,14 @@
 @layer base {
   :root {
     /* Layout spacing variables for header/toolbar/pdf preview alignment */
-    --header-h: 0.25rem; /* matches header h-16 (Tailwind h-16 = 4rem) */
-    --toolbar-h: 3rem; /* approximate toolbar height (adjust if needed) */
-    --toolbar-gap: 0.25rem; /* gap between header and toolbar */
-    --preview-gap: 1rem; /* gap between toolbar bottom and resume preview (white page) */
+    --header-h: 0.25rem;
+    /* matches header h-16 (Tailwind h-16 = 4rem) */
+    --toolbar-h: 3rem;
+    /* approximate toolbar height (adjust if needed) */
+    --toolbar-gap: 0.25rem;
+    /* gap between header and toolbar */
+    --preview-gap: 1rem;
+    /* gap between toolbar bottom and resume preview (white page) */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;

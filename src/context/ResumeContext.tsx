@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { ResumeState, ResumeData, SectionId, Project, Education, Skill, Achievement, Leadership, Certificate, Reference, StyleSettings } from '../types/resume';
+import { dummyData } from '../data/dummy';
 
 // Helper to generate IDs if uuid import fails or for simplicity
 const generateId = () => Math.random().toString(36).substr(2, 9);
@@ -32,6 +33,7 @@ const defaultSettings: StyleSettings = {
     lineHeight: 'normal',
     alignment: 'left',
     themeColor: '#2563eb',
+    fontColor: '#334155',
 };
 
 const defaultOrder: SectionId[] = [
@@ -63,6 +65,7 @@ interface ResumeContextType {
     updateSettings: (settings: Partial<StyleSettings>) => void;
     // Actions
     resetResume: () => void;
+    loadDemoData: () => void;
 }
 
 const ResumeContext = createContext<ResumeContextType | undefined>(undefined);
@@ -183,9 +186,12 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         setResumeData(defaultData);
         setSectionOrder(defaultOrder);
         setSettings(defaultSettings);
-        localStorage.removeItem('resumeForge_data');
-        localStorage.removeItem('resumeForge_order');
         localStorage.removeItem('resumeForge_settings');
+    };
+
+    const loadDemoData = () => {
+        setResumeData(dummyData);
+        setSectionOrder(defaultOrder);
     };
 
     return (
@@ -201,7 +207,8 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             reorderItems,
             setSectionOrder,
             updateSettings,
-            resetResume
+            resetResume,
+            loadDemoData
         }}>
             {children}
         </ResumeContext.Provider>

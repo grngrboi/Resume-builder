@@ -2,25 +2,13 @@ import React, { useState } from 'react';
 import { Download, RotateCcw, Check } from 'lucide-react';
 import { Button } from './ui/Button';
 import { useResume } from '../context/ResumeContext';
-import html2pdf from 'html2pdf.js';
 
 export const Header: React.FC = () => {
-    const { resetResume } = useResume();
+    const { resetResume, loadDemoData } = useResume();
     const [showToast, setShowToast] = useState(false);
 
     const handleDownload = () => {
-        const element = document.getElementById('resume-preview');
-        if (!element) return;
-
-        const opt = {
-            margin: 0,
-            filename: 'resume.pdf',
-            image: { type: 'jpeg' as const, quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
-        };
-
-        html2pdf().set(opt).from(element).save();
+        window.print();
     };
 
     const handleReset = () => {
@@ -32,7 +20,7 @@ export const Header: React.FC = () => {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-900/60 backdrop-blur-xl supports-[backdrop-filter]:bg-slate-900/40">
+        <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-900/60 backdrop-blur-xl supports-[backdrop-filter]:bg-slate-900/40 print:hidden">
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
                 <div className="flex items-center gap-2">
                     <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
@@ -48,7 +36,10 @@ export const Header: React.FC = () => {
                     </Button>
                     <Button size="sm" onClick={handleDownload}>
                         <Download className="mr-2 h-4 w-4" />
-                        Download PDF
+                        Export to PDF
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={loadDemoData} className="text-xs text-slate-400 hover:text-white">
+                        Load Demo
                     </Button>
                 </div>
             </div>

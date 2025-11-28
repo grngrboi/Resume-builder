@@ -96,11 +96,12 @@ export interface ResumeData {
 }
 
 export interface StyleSettings {
-    fontFamily: 'Inter' | 'Roboto' | 'Lato' | 'Merriweather';
+    fontFamily: 'Inter' | 'Roboto' | 'Lato' | 'Merriweather' | 'SF Pro';
     fontSize: 'small' | 'medium' | 'large';
     lineHeight: 'tight' | 'normal' | 'relaxed';
     alignment: 'left' | 'justify';
     themeColor: string;
+    fontColor: string;
 }
 
 export interface ResumeState {

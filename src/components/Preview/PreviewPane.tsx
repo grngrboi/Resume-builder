@@ -1,6 +1,5 @@
 import React from 'react';
 import { Download, ChevronDown } from 'lucide-react';
-import html2pdf from 'html2pdf.js';
 import { ResumeDocument } from './ResumeDocument';
 import { useResume } from '../../context/ResumeContext';
 import { Card } from '../ui/Card';
@@ -16,20 +15,7 @@ import {
 export const PreviewPane: React.FC = () => {
     const { settings, updateSettings } = useResume();
 
-    const handleDownload = () => {
-        const element = document.getElementById('resume-preview');
-        if (!element) return;
 
-        const opt = {
-            margin: 0,
-            filename: 'resume.pdf',
-            image: { type: 'jpeg' as const, quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
-        };
-
-        html2pdf().set(opt).from(element).save();
-    };
 
     return (
         <div className="flex flex-col h-full bg-slate-950/30 relative overflow-hidden">
@@ -38,7 +24,7 @@ export const PreviewPane: React.FC = () => {
 
             {/* Styling Controls Toolbar */}
             <div
-                className="absolute left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl p-2 px-4 border border-white/10 bg-slate-900/80 backdrop-blur-xl flex flex-wrap gap-4 items-center justify-between shadow-2xl rounded-2xl transition-all duration-300 hover:bg-slate-900/90 hover:shadow-blue-500/10"
+                className="absolute left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl p-2 px-4 border border-white/10 bg-slate-900/80 backdrop-blur-xl flex flex-wrap gap-4 items-center justify-center shadow-2xl rounded-2xl transition-all duration-300 hover:bg-slate-900/90 hover:shadow-blue-500/10 font-sans text-slate-200 print:hidden"
                 style={{ top: 'calc(var(--header-h) + var(--toolbar-gap))' }}
             >
                 <div className="flex items-center gap-4">
@@ -50,12 +36,13 @@ export const PreviewPane: React.FC = () => {
                                     {settings.fontFamily} <ChevronDown className="ml-2 h-3 w-3 opacity-50" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 text-slate-200 rounded-xl shadow-xl">
+                            <DropdownMenuContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 text-slate-200 rounded-xl shadow-xl font-sans">
                                 <DropdownMenuRadioGroup value={settings.fontFamily} onValueChange={(value) => updateSettings({ fontFamily: value as any })}>
                                     <DropdownMenuRadioItem value="Inter" className="cursor-pointer hover:bg-white/10 focus:bg-white/10 rounded-lg my-1">Inter</DropdownMenuRadioItem>
                                     <DropdownMenuRadioItem value="Roboto" className="cursor-pointer hover:bg-white/10 focus:bg-white/10 rounded-lg my-1">Roboto</DropdownMenuRadioItem>
                                     <DropdownMenuRadioItem value="Lato" className="cursor-pointer hover:bg-white/10 focus:bg-white/10 rounded-lg my-1">Lato</DropdownMenuRadioItem>
                                     <DropdownMenuRadioItem value="Merriweather" className="cursor-pointer hover:bg-white/10 focus:bg-white/10 rounded-lg my-1">Merriweather</DropdownMenuRadioItem>
+                                    <DropdownMenuRadioItem value="SF Pro" className="cursor-pointer hover:bg-white/10 focus:bg-white/10 rounded-lg my-1">SF Pro</DropdownMenuRadioItem>
                                 </DropdownMenuRadioGroup>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -71,7 +58,7 @@ export const PreviewPane: React.FC = () => {
                                     {settings.fontSize} <ChevronDown className="ml-2 h-3 w-3 opacity-50" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 text-slate-200 rounded-xl shadow-xl">
+                            <DropdownMenuContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 text-slate-200 rounded-xl shadow-xl font-sans">
                                 <DropdownMenuRadioGroup value={settings.fontSize} onValueChange={(value) => updateSettings({ fontSize: value as any })}>
                                     <DropdownMenuRadioItem value="small" className="cursor-pointer hover:bg-white/10 focus:bg-white/10 rounded-lg my-1 capitalize">Small</DropdownMenuRadioItem>
                                     <DropdownMenuRadioItem value="medium" className="cursor-pointer hover:bg-white/10 focus:bg-white/10 rounded-lg my-1 capitalize">Medium</DropdownMenuRadioItem>
@@ -91,7 +78,7 @@ export const PreviewPane: React.FC = () => {
                                     {settings.lineHeight} <ChevronDown className="ml-2 h-3 w-3 opacity-50" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 text-slate-200 rounded-xl shadow-xl">
+                            <DropdownMenuContent className="bg-slate-900/95 backdrop-blur-xl border-white/10 text-slate-200 rounded-xl shadow-xl font-sans">
                                 <DropdownMenuRadioGroup value={settings.lineHeight} onValueChange={(value) => updateSettings({ lineHeight: value as any })}>
                                     <DropdownMenuRadioItem value="tight" className="cursor-pointer hover:bg-white/10 focus:bg-white/10 rounded-lg my-1 capitalize">Tight</DropdownMenuRadioItem>
                                     <DropdownMenuRadioItem value="normal" className="cursor-pointer hover:bg-white/10 focus:bg-white/10 rounded-lg my-1 capitalize">Normal</DropdownMenuRadioItem>
@@ -117,12 +104,24 @@ export const PreviewPane: React.FC = () => {
                             <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] bg-black/80 text-white px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Theme</span>
                         </div>
                     </div>
-                </div>
 
-                <Button size="sm" onClick={handleDownload} className="rounded-lg bg-primary/80 hover:bg-primary text-white shadow-lg shadow-primary/20">
-                    <Download className="mr-2 h-3 w-3" />
-                    <span className="text-xs font-bold uppercase tracking-wide">Export</span>
-                </Button>
+                    <div className="w-px h-4 bg-white/10 hidden sm:block" />
+
+                    <div className="flex items-center gap-2">
+                        <div className="relative group">
+                            <div className="w-6 h-6 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white/50 transition-colors cursor-pointer ring-2 ring-transparent group-hover:ring-primary/50">
+                                <input
+                                    type="color"
+                                    className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] cursor-pointer p-0 border-0 opacity-0"
+                                    value={settings.fontColor}
+                                    onChange={(e) => updateSettings({ fontColor: e.target.value })}
+                                />
+                                <div className="w-full h-full" style={{ backgroundColor: settings.fontColor }} />
+                            </div>
+                            <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] bg-black/80 text-white px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Text</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/* Preview Area */}
