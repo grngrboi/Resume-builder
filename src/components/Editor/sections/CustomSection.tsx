@@ -5,16 +5,18 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2, Plus } from 'lucide-react';
 import { Button } from '../../ui/Button';
 import { Input } from '../../ui/Input';
+import { Textarea } from '../../ui/Textarea';
 import { useResume } from '../../../context/ResumeContext';
-import { Education as EducationType } from '../../../types/resume';
+import { CustomSectionItem } from '../../../types/resume';
 
-interface EducationItemProps {
-    education: EducationType;
+interface CustomSectionItemProps {
+    item: CustomSectionItem;
+    sectionId: string;
     onRemove: (id: string) => void;
-    onUpdate: (id: string, data: Partial<EducationType>) => void;
+    onUpdate: (id: string, data: Partial<CustomSectionItem>) => void;
 }
 
-const EducationItem: React.FC<EducationItemProps> = ({ education, onRemove, onUpdate }) => {
+const CustomSectionItemComponent: React.FC<CustomSectionItemProps> = ({ item, sectionId, onRemove, onUpdate }) => {
     const {
         attributes,
         listeners,
@@ -22,7 +24,7 @@ const EducationItem: React.FC<EducationItemProps> = ({ education, onRemove, onUp
         transform,
         transition,
         isDragging
-    } = useSortable({ id: education.id });
+    } = useSortable({ id: item.id });
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -44,7 +46,7 @@ const EducationItem: React.FC<EducationItemProps> = ({ education, onRemove, onUp
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => onRemove(education.id)}
+                    onClick={() => onRemove(item.id)}
                     className="absolute right-2 top-2 text-red-400 hover:bg-red-900/20 hover:text-red-300"
                 >
                     <Trash2 className="h-4 w-4" />
@@ -54,46 +56,49 @@ const EducationItem: React.FC<EducationItemProps> = ({ education, onRemove, onUp
             <div className="grid gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2">
                     <Input
-                        label="Institution"
-                        value={education.institution}
-                        onChange={(e) => onUpdate(education.id, { institution: e.target.value })}
-                        placeholder="University Name"
+                        label="Title"
+                        value={item.title}
+                        onChange={(e) => onUpdate(item.id, { title: e.target.value })}
+                        placeholder="e.g. Project Name / Role"
                     />
                 </div>
+                <Input
+                    label="Subtitle"
+                    value={item.subtitle || ''}
+                    onChange={(e) => onUpdate(item.id, { subtitle: e.target.value })}
+                    placeholder="e.g. Company / Organization"
+                />
+                <Input
+                    label="Date"
+                    value={item.date || ''}
+                    onChange={(e) => onUpdate(item.id, { date: e.target.value })}
+                    placeholder="e.g. 2023 - Present"
+                />
                 <div className="sm:col-span-2">
-                    <Input
-                        label="Degree"
-                        value={education.degree}
-                        onChange={(e) => onUpdate(education.id, { degree: e.target.value })}
-                        placeholder="Bachelor of Science in Computer Science"
+                    <Textarea
+                        label="Description"
+                        value={item.description || ''}
+                        onChange={(e) => onUpdate(item.id, { description: e.target.value })}
+                        placeholder="Description..."
+                        className="min-h-[80px]"
                     />
                 </div>
-                <Input
-                    label="Start Date"
-                    value={education.startDate}
-                    onChange={(e) => onUpdate(education.id, { startDate: e.target.value })}
-                    placeholder="Sep 2019"
-                />
-                <Input
-                    label="End Date"
-                    value={education.endDate}
-                    onChange={(e) => onUpdate(education.id, { endDate: e.target.value })}
-                    placeholder="May 2023"
-                />
-                <Input
-                    label="GPA (Optional)"
-                    value={education.gpa || ''}
-                    onChange={(e) => onUpdate(education.id, { gpa: e.target.value })}
-                    placeholder="3.8/4.0"
-                />
             </div>
         </div>
     );
 };
 
-export const Education: React.FC = () => {
+interface CustomSectionProps {
+    sectionId: string;
+}
+
+export const CustomSection: React.FC<CustomSectionProps> = ({ sectionId }) => {
     const { resumeData, addItem, removeItem, updateItem, reorderItems } = useResume();
-    const { education } = resumeData;
+
+    // Find the custom section in resumeData
+    const section = resumeData.customSections.find(s => s.id === sectionId);
+
+    if (!section) return null;
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -105,18 +110,18 @@ export const Education: React.FC = () => {
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
         if (over && active.id !== over.id) {
-            const oldIndex = education.findIndex((e) => e.id === active.id);
-            const newIndex = education.findIndex((e) => e.id === over.id);
-            reorderItems('education', arrayMove(education, oldIndex, newIndex));
+            const oldIndex = section.items.findIndex((i) => i.id === active.id);
+            const newIndex = section.items.findIndex((i) => i.id === over.id);
+            reorderItems(sectionId, arrayMove(section.items, oldIndex, newIndex));
         }
     };
 
     const handleAdd = () => {
-        addItem('education', {
-            institution: '',
-            degree: '',
-            startDate: '',
-            endDate: '',
+        addItem(sectionId, {
+            title: '',
+            subtitle: '',
+            date: '',
+            description: '',
         });
     };
 
@@ -128,15 +133,16 @@ export const Education: React.FC = () => {
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext
-                    items={education}
+                    items={section.items}
                     strategy={verticalListSortingStrategy}
                 >
-                    {education.map((edu) => (
-                        <EducationItem
-                            key={edu.id}
-                            education={edu}
-                            onRemove={(id) => removeItem('education', id)}
-                            onUpdate={(id, data) => updateItem('education', id, data)}
+                    {section.items.map((item) => (
+                        <CustomSectionItemComponent
+                            key={item.id}
+                            item={item}
+                            sectionId={sectionId}
+                            onRemove={(id) => removeItem(sectionId, id)}
+                            onUpdate={(id, data) => updateItem(sectionId, id, data)}
                         />
                     ))}
                 </SortableContext>
@@ -144,7 +150,7 @@ export const Education: React.FC = () => {
 
             <Button onClick={handleAdd} variant="outline" className="w-full border-dashed border-white/20 text-slate-300 hover:bg-white/5 hover:text-white">
                 <Plus className="mr-2 h-4 w-4" />
-                Add Education
+                Add Item
             </Button>
         </div>
     );

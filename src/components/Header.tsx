@@ -30,11 +30,11 @@ export const Header: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={handleReset}>
+                    <Button variant="outline" size="sm" onClick={handleReset} className="text-slate-200 hover:bg-white/10 hover:text-white border-white/10">
                         <RotateCcw className="mr-2 h-4 w-4" />
                         Reset
                     </Button>
-                    <Button size="sm" onClick={handleDownload}>
+                    <Button size="sm" onClick={handleDownload} className="bg-blue-600 text-white hover:bg-blue-700 shadow-blue-900/20">
                         <Download className="mr-2 h-4 w-4" />
                         Export to PDF
                     </Button>

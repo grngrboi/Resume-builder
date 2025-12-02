@@ -25,6 +25,7 @@ const defaultData: ResumeData = {
     leadership: [],
     certificates: [],
     references: [],
+    customSections: [],
 };
 
 const defaultSettings: StyleSettings = {
@@ -55,10 +56,10 @@ interface ResumeContextType {
     updatePersonalDetails: (details: Partial<ResumeData['personal']>) => void;
     updateSummary: (summary: string) => void;
     // Generic update for array sections
-    addItem: (section: keyof ResumeData, item: any) => void;
-    removeItem: (section: keyof ResumeData, id: string) => void;
-    updateItem: (section: keyof ResumeData, id: string, item: any) => void;
-    reorderItems: (section: keyof ResumeData, newItems: any[]) => void;
+    addItem: (section: keyof ResumeData | string, item: any) => void;
+    removeItem: (section: keyof ResumeData | string, id: string) => void;
+    updateItem: (section: keyof ResumeData | string, id: string, item: any) => void;
+    reorderItems: (section: keyof ResumeData | string, newItems: any[]) => void;
     // Section ordering
     setSectionOrder: (order: SectionId[]) => void;
     // Settings
@@ -66,6 +67,9 @@ interface ResumeContextType {
     // Actions
     resetResume: () => void;
     loadDemoData: () => void;
+    // Custom Sections
+    addCustomSection: (title: string) => void;
+    removeCustomSection: (id: string) => void;
 }
 
 const ResumeContext = createContext<ResumeContextType | undefined>(undefined);
@@ -82,7 +86,12 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         const savedOrder = localStorage.getItem('resumeForge_order');
         const savedSettings = localStorage.getItem('resumeForge_settings');
 
-        if (savedData) setResumeData(JSON.parse(savedData));
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+            // Ensure customSections exists for backward compatibility
+            if (!parsedData.customSections) parsedData.customSections = [];
+            setResumeData(parsedData);
+        }
         if (savedOrder) setSectionOrder(JSON.parse(savedOrder));
         if (savedSettings) setSettings(JSON.parse(savedSettings));
 
@@ -109,12 +118,40 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         setResumeData(prev => ({ ...prev, summary }));
     };
 
-    const addItem = (section: keyof ResumeData, item: any) => {
+    const addCustomSection = (title: string) => {
+        const id = `custom-${generateId()}`;
+        const newSection = { id, name: title, items: [] };
+        setResumeData(prev => ({
+            ...prev,
+            customSections: [...prev.customSections, newSection]
+        }));
+        setSectionOrder(prev => [...prev, id]);
+    };
+
+    const removeCustomSection = (id: string) => {
+        setResumeData(prev => ({
+            ...prev,
+            customSections: prev.customSections.filter(s => s.id !== id)
+        }));
+        setSectionOrder(prev => prev.filter(sid => sid !== id));
+    };
+
+    const addItem = (section: keyof ResumeData | string, item: any) => {
         const newItem = { ...item, id: item.id || generateId() };
         setResumeData(prev => {
-            const currentSection = prev[section];
-            if (Array.isArray(currentSection)) {
-                return { ...prev, [section]: [...currentSection, newItem] };
+            // Check if it's a standard array section
+            if (section in prev && Array.isArray(prev[section as keyof ResumeData])) {
+                return { ...prev, [section]: [...(prev[section as keyof ResumeData] as any[]), newItem] };
+            }
+            // Check if it's a custom section
+            const customSectionIndex = prev.customSections.findIndex(s => s.id === section);
+            if (customSectionIndex !== -1) {
+                const newCustomSections = [...prev.customSections];
+                newCustomSections[customSectionIndex] = {
+                    ...newCustomSections[customSectionIndex],
+                    items: [...newCustomSections[customSectionIndex].items, newItem]
+                };
+                return { ...prev, customSections: newCustomSections };
             }
             // Handle nested skills object
             if (section === 'skills' && item.type) {
@@ -131,15 +168,23 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         });
     };
 
-    const removeItem = (section: keyof ResumeData, id: string) => {
+    const removeItem = (section: keyof ResumeData | string, id: string) => {
         setResumeData(prev => {
-            const currentSection = prev[section];
-            if (Array.isArray(currentSection)) {
-                return { ...prev, [section]: currentSection.filter((i: any) => i.id !== id) };
+            // Check if it's a standard array section
+            if (section in prev && Array.isArray(prev[section as keyof ResumeData])) {
+                return { ...prev, [section]: (prev[section as keyof ResumeData] as any[]).filter((i: any) => i.id !== id) };
+            }
+            // Check if it's a custom section
+            const customSectionIndex = prev.customSections.findIndex(s => s.id === section);
+            if (customSectionIndex !== -1) {
+                const newCustomSections = [...prev.customSections];
+                newCustomSections[customSectionIndex] = {
+                    ...newCustomSections[customSectionIndex],
+                    items: newCustomSections[customSectionIndex].items.filter(i => i.id !== id)
+                };
+                return { ...prev, customSections: newCustomSections };
             }
             if (section === 'skills') {
-                // This is a bit tricky for skills, we might need a more specific remover or pass type
-                // For now, let's assume we search all skill types
                 const newSkills = { ...prev.skills };
                 (Object.keys(newSkills) as Array<keyof typeof newSkills>).forEach(key => {
                     newSkills[key] = newSkills[key].filter(s => s.id !== id);
@@ -150,14 +195,24 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         });
     };
 
-    const updateItem = (section: keyof ResumeData, id: string, updatedItem: any) => {
+    const updateItem = (section: keyof ResumeData | string, id: string, updatedItem: any) => {
         setResumeData(prev => {
-            const currentSection = prev[section];
-            if (Array.isArray(currentSection)) {
+            // Check if it's a standard array section
+            if (section in prev && Array.isArray(prev[section as keyof ResumeData])) {
                 return {
                     ...prev,
-                    [section]: currentSection.map((i: any) => i.id === id ? { ...i, ...updatedItem } : i)
+                    [section]: (prev[section as keyof ResumeData] as any[]).map((i: any) => i.id === id ? { ...i, ...updatedItem } : i)
                 };
+            }
+            // Check if it's a custom section
+            const customSectionIndex = prev.customSections.findIndex(s => s.id === section);
+            if (customSectionIndex !== -1) {
+                const newCustomSections = [...prev.customSections];
+                newCustomSections[customSectionIndex] = {
+                    ...newCustomSections[customSectionIndex],
+                    items: newCustomSections[customSectionIndex].items.map(i => i.id === id ? { ...i, ...updatedItem } : i)
+                };
+                return { ...prev, customSections: newCustomSections };
             }
             if (section === 'skills' && updatedItem.type) {
                 const skillType = updatedItem.type as keyof typeof prev.skills;
@@ -173,8 +228,22 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         });
     };
 
-    const reorderItems = (section: keyof ResumeData, newItems: any[]) => {
-        setResumeData(prev => ({ ...prev, [section]: newItems }));
+    const reorderItems = (section: keyof ResumeData | string, newItems: any[]) => {
+        setResumeData(prev => {
+            if (section in prev) {
+                return { ...prev, [section]: newItems };
+            }
+            const customSectionIndex = prev.customSections.findIndex(s => s.id === section);
+            if (customSectionIndex !== -1) {
+                const newCustomSections = [...prev.customSections];
+                newCustomSections[customSectionIndex] = {
+                    ...newCustomSections[customSectionIndex],
+                    items: newItems
+                };
+                return { ...prev, customSections: newCustomSections };
+            }
+            return prev;
+        });
     };
 
     const updateSettings = (newSettings: Partial<StyleSettings>) => {
@@ -182,7 +251,6 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     };
 
     const resetResume = () => {
-        // Optional: Implement undo logic here before resetting
         setResumeData(defaultData);
         setSectionOrder(defaultOrder);
         setSettings(defaultSettings);
@@ -208,7 +276,9 @@ export const ResumeProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             setSectionOrder,
             updateSettings,
             resetResume,
-            loadDemoData
+            loadDemoData,
+            addCustomSection,
+            removeCustomSection
         }}>
             {children}
         </ResumeContext.Provider>

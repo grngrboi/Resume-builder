@@ -45,7 +45,7 @@ export default {
                 // Keep existing custom colors for backward compatibility if needed
                 surface: '#ffffff',
                 text: {
-                    primary: '#1e293b',
+                    primary: "hsl(var(--foreground))",
                     secondary: '#64748b',
                 },
             },

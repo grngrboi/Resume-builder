@@ -43,7 +43,7 @@ const SkillList: React.FC<SkillListProps> = ({ title, skills, type }) => {
                         </Button>
                     </div>
                 ))}
-                <Button onClick={handleAdd} variant="outline" size="sm" className="w-full border-dashed border-white/20 hover:bg-white/5 hover:text-white">
+                <Button onClick={handleAdd} variant="outline" size="sm" className="w-full border-dashed border-white/20 text-slate-300 hover:bg-white/5 hover:text-white">
                     <Plus className="mr-2 h-3 w-3" />
                     Add {title}
                 </Button>

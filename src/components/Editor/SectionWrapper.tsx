@@ -11,9 +11,10 @@ interface SectionWrapperProps {
     id: string;
     title: string;
     children: React.ReactNode;
+    onDelete?: () => void;
 }
 
-export const SectionWrapper: React.FC<SectionWrapperProps> = ({ id, title, children }) => {
+export const SectionWrapper: React.FC<SectionWrapperProps> = ({ id, title, children, onDelete }) => {
     const {
         attributes,
         listeners,
@@ -66,19 +67,39 @@ export const SectionWrapper: React.FC<SectionWrapperProps> = ({ id, title, child
                         {title}
                     </button>
 
-                    <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="text-slate-400 hover:text-slate-200"
-                    >
-                        <svg
-                            className={`h-5 w-5 transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+                    <div className="flex items-center gap-2">
+                        {onDelete && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (confirm('Are you sure you want to delete this section?')) {
+                                        onDelete();
+                                    }
+                                }}
+                                className="text-red-400 hover:text-red-300 p-1 hover:bg-red-900/20 rounded"
+                                title="Delete Section"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                </svg>
+                            </button>
+                        )}
+                        <button
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="text-slate-400 hover:text-slate-200"
                         >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
+                            <svg
+                                className={`h-5 w-5 transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 {isOpen && (

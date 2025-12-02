@@ -90,7 +90,7 @@ export const PreviewPane: React.FC = () => {
 
                     <div className="w-px h-4 bg-white/10 hidden sm:block" />
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                         <div className="relative group">
                             <div className="w-6 h-6 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white/50 transition-colors cursor-pointer ring-2 ring-transparent group-hover:ring-primary/50">
                                 <input
@@ -103,11 +103,7 @@ export const PreviewPane: React.FC = () => {
                             </div>
                             <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] bg-black/80 text-white px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Theme</span>
                         </div>
-                    </div>
 
-                    <div className="w-px h-4 bg-white/10 hidden sm:block" />
-
-                    <div className="flex items-center gap-2">
                         <div className="relative group">
                             <div className="w-6 h-6 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white/50 transition-colors cursor-pointer ring-2 ring-transparent group-hover:ring-primary/50">
                                 <input
@@ -121,6 +117,7 @@ export const PreviewPane: React.FC = () => {
                             <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] bg-black/80 text-white px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Text</span>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -129,7 +126,7 @@ export const PreviewPane: React.FC = () => {
                 className="flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center"
                 style={{ paddingTop: 'calc(var(--header-h) + var(--toolbar-gap) + var(--toolbar-h) + var(--preview-gap))' }}
             >
-                <div className="origin-top scale-[0.6] sm:scale-[0.7] md:scale-[0.8] lg:scale-[0.9] xl:scale-100 transition-transform duration-200">
+                <div className="origin-top scale-[0.6] sm:scale-[0.7] md:scale-[0.8] lg:scale-[0.9] xl:scale-100 transition-transform duration-200 print:scale-100 print:transform-none">
                     <ResumeDocument />
                 </div>
             </div>

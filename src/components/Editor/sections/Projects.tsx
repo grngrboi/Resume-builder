@@ -34,8 +34,8 @@ const ProjectItem: React.FC<ProjectItemProps> = ({ project, onRemove, onUpdate }
     };
 
     return (
-        <div ref={setNodeRef} style={style} className="mb-4 rounded-xl border border-white/10 bg-slate-900/40 p-4 shadow-sm backdrop-blur-md">
-            <div className="mb-4 flex items-center justify-between">
+        <div ref={setNodeRef} style={style} className="relative mb-4 rounded-xl border border-white/10 bg-slate-900/40 p-4 shadow-sm backdrop-blur-md">
+            <div className="mb-4 flex items-center justify-between pr-8">
                 <button
                     {...attributes}
                     {...listeners}
@@ -47,7 +47,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({ project, onRemove, onUpdate }
                     variant="ghost"
                     size="sm"
                     onClick={() => onRemove(project.id)}
-                    className="text-red-400 hover:bg-red-900/20 hover:text-red-300"
+                    className="absolute right-2 top-2 text-red-400 hover:bg-red-900/20 hover:text-red-300"
                 >
                     <Trash2 className="h-4 w-4" />
                 </Button>
@@ -161,7 +161,7 @@ export const Projects: React.FC = () => {
                 </SortableContext>
             </DndContext>
 
-            <Button onClick={handleAdd} variant="outline" className="w-full border-dashed border-white/20 hover:bg-white/5 hover:text-white">
+            <Button onClick={handleAdd} variant="outline" className="w-full border-dashed border-white/20 text-slate-300 hover:bg-white/5 hover:text-white">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Project
             </Button>

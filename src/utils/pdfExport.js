@@ -295,3 +295,7 @@ export const generatePDF = () => {
     }
   });
 };
+
+// Direct download without modal or print preview.
+// Uses existing paginated .resume-page elements inside #resume-print-root if present;
+// falls back to #resume-preview.

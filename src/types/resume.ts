@@ -7,7 +7,22 @@ export type SectionId =
     | 'achievements'
     | 'leadership'
     | 'certificates'
-    | 'references';
+    | 'references'
+    | string;
+
+export interface CustomSectionItem {
+    id: string;
+    title: string;
+    subtitle?: string;
+    date?: string;
+    description?: string;
+}
+
+export interface CustomSection {
+    id: string;
+    name: string;
+    items: CustomSectionItem[];
+}
 
 export interface PersonalDetails {
     fullName: string;
@@ -93,6 +108,7 @@ export interface ResumeData {
     leadership: Leadership[];
     certificates: Certificate[];
     references: Reference[];
+    customSections: CustomSection[];
 }
 
 export interface StyleSettings {

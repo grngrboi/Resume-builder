@@ -47,7 +47,7 @@ export const Achievements: React.FC = () => {
                 </div>
             ))}
 
-            <Button onClick={handleAdd} variant="outline" className="w-full border-dashed border-white/20 hover:bg-white/5 hover:text-white">
+            <Button onClick={handleAdd} variant="outline" className="w-full border-dashed border-white/20 text-slate-300 hover:bg-white/5 hover:text-white">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Achievement
             </Button>
